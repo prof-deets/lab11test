@@ -1,61 +1,67 @@
+// Program creates a client roster with a todo list (array) of tasks that need to be performed for each client
+
 #include <iostream>
+#include <array>
+#include <string>
+
 using namespace std;
 
-void Reverse(string *&, int);                     // Reverse order of strings in array
-string OutputArray(string *&arrPtr, int arrSize); // Output array on 1 line
+bool isInt(const string &str); // Checks if string is an integer
+
+struct Client
+{
+    string name;
+    string address;
+    string *tasks;
+    size_t numTasks; // Stores array size for tasks
+
+    ~ Client {
+
+    }
+};
 
 int main()
 {
     // Initialize variables
-    int ARRAY_SIZE = 5;
-    string *sArrayPtr = new string[ARRAY_SIZE]; // Allocate array of 5 ints
+    string userInput = "";
+    int numClientsToInput = 0;
+    Client *clientRoster = nullptr; // Will be used to point to array of clients
 
-    *(sArrayPtr + 0) = "John";
-    *(sArrayPtr + 1) = "Jacob";
-    *(sArrayPtr + 2) = "Jingle";
-    *(sArrayPtr + 3) = "Heimer";
-    *(sArrayPtr + 4) = "Schmidt";
+    // Get number of clients validation loop
+    do
+    {
+        cout << "How many clients would you like to input (0 to exit): ";
+        getline(cin, userInput);
+        if (isInt(userInput))
+        {
+            numClientsToInput = stoi(userInput);
+        }
+        else
+        {
+            cout << "Invalid. Please enter an integer > 0.";
+        }
+    } while (numClientsToInput <= 0);
 
-    // Output array before reverse
-    cout << "Name array BEFORE reverse: " << OutputArray(sArrayPtr, ARRAY_SIZE) << endl << endl;
+    // Now that we have a valid int, let's create a client roster of that size
+    clientRoster = new Client[numClientsToInput];
 
-    Reverse(sArrayPtr, ARRAY_SIZE); // Reverse order of array strings
-
-    // Output array after reverse
-    cout << "Name array AFTER reverse: " << OutputArray(sArrayPtr, ARRAY_SIZE) << endl << endl;
-
+    
     // Deallocate heap elements and nullify pointers
-    delete[] sArrayPtr;
-    sArrayPtr = nullptr;
+    delete[] clientRoster;
+    clientRoster = nullptr;
 
     return 0;
 }
 
-// Populate array with user input
-void Reverse(string *&arrPtr, int arrSize)
+// Check if input is an integer
+bool isInt(const string &str)
 {
-    // For array size, loop and exchange index values to reverse array
-    string temp = "";
-    for (size_t i = 0; i < arrSize / 2; i++) // Loop halfway up array exchanging opposite index values
+    for (char c : str)
     {
-        temp = *(arrPtr + i);
-        *(arrPtr + i) = *(arrPtr + arrSize - 1 - i);
-        *(arrPtr + arrSize - 1 - i) = temp;
+        if (!isdigit(c))
+        {
+            return false;
+        }
     }
-}
-
-// Output array on one line
-string OutputArray(string *&arrPtr, int arrSize)
-{
-    // For array size, output each value in some kind of formatted way
-    string output = "{";
-    for (size_t i = 0; i < arrSize; i++)
-    {
-        if (i > 0)
-            output += ", "; // Add ',' and ' ' for each additional value after the first
-        output += *(arrPtr + i);
-    }
-    output += "}";
-
-    return output;
+    return true;
 }
