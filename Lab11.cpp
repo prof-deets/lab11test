@@ -6,11 +6,9 @@
 
 using namespace std;
 
-bool isInt(const string &str); // Checks if string is an integer
-unsigned int getPositiveIntFromUser(unsigned int lowerBound, const string &prompt, const string &errorMessage);
-
 struct Client
 {
+    static size_t numOfClients;
     string name;
     string address;
     string *tasks;
@@ -23,22 +21,39 @@ struct Client
     }
 };
 
+bool isInt(const string &str);                                                                                  // Checks if string is an integer
+unsigned int getPositiveIntFromUser(unsigned int lowerBound, const string &prompt, const string &errorMessage); // Collect an integer >= 0 from user
+void inputClient(Client *cPtr);                                                                                 // Prompts user to input client information
+void displayClient(const Client *const cPtr);                                                                   // Displays client information for given client
+
 int main()
 {
     // Initialize variables
     // string userInput = "";
     int numClientsToInput = 0;
-    Client *clientRoster = nullptr; // Will be used to point to array of clients
+    Client *clientRosterPtr = nullptr; // Will be used to point to array of clients
 
     // Get number of clients validation loop
-    numClientsToInput = getPositiveIntFromUser(0, "How many clients would you like to input (0 to exit): ", "Invalid. Please enter an integer > 0.");
+    numClientsToInput = getPositiveIntFromUser(0, "How many clients would you like to input (0 to exit): ", "Invalid. Please enter an integer >= 0.");
 
     // Now that we have a valid int, let's create a client roster of that size
-    // clientRoster = new Client[numClientsToInput];
+    clientRosterPtr = new Client[numClientsToInput]; // clientRosterPtr now points to new array of clients
+
+    // Loop through array to create client profiles
+    for (size_t i = 0; i < numClientsToInput; i++)
+    {
+        inputClient(&clientRosterPtr[i]);
+    }
+
+    // Loop through array to output client profiles
+    for (size_t i = 0; i < numClientsToInput; i++)
+    {
+        inputClient(&clientRosterPtr[i]);
+    }
 
     // Deallocate heap elements and nullify pointers
-    delete[] clientRoster;
-    clientRoster = nullptr;
+    delete[] clientRosterPtr;
+    clientRosterPtr = nullptr;
 
     return 0;
 }
@@ -57,7 +72,7 @@ bool isInt(const string &str)
 }
 
 // Validation loop that returns int >= 0
-unsigned int getPositiveIntFromUser(unsigned int lowerBound, const string &prompt, const string &errorMessage)
+unsigned int getPositiveIntFromUser(unsigned int lowerBound, const string &prompt, const string &errorMessage = "Invalid.")
 {
     string userInput;
     while (true)
@@ -74,3 +89,24 @@ unsigned int getPositiveIntFromUser(unsigned int lowerBound, const string &promp
         }
     }
 }
+
+// Prompts user to input client information
+void inputClient(Client *cPtr)
+{
+    cout << "Client name: ";
+    getline(cin, cPtr->name);
+    cout << "Client address: ";
+    getline(cin, cPtr->address);
+    cPtr->numTasks = getPositiveIntFromUser(0, "How many tasks would you like to input for client: ", "Invalid. Please enter an integer >= 0.");
+
+    // Now that we have the number of tasks to input, populate array and prompt user to input tasks
+    cPtr->tasks = new string[cPtr->numTasks]; // Create new array to hold tasks
+    for (size_t i = 0; i < cPtr->numTasks; i++)
+    {
+        cout << "Please enter task #" << i << ": ";
+        getline(cin, cPtr->tasks[i]);
+    }
+}
+
+// Displays client information for given client
+void displayClient(const Client *const cPtr);
