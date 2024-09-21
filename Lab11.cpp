@@ -7,45 +7,35 @@
 using namespace std;
 
 bool isInt(const string &str); // Checks if string is an integer
+unsigned int getPositiveIntFromUser(unsigned int lowerBound, const string &prompt, const string &errorMessage);
 
 struct Client
 {
     string name;
     string address;
     string *tasks;
-    size_t numTasks; // Stores array size for tasks
-
-    ~ Client {
-
+    unsigned int numTasks; // Stores array size for tasks
+    ~Client()
+    {
+        if (tasks)
+            delete[] tasks;
+        tasks = nullptr;
     }
 };
 
 int main()
 {
     // Initialize variables
-    string userInput = "";
+    // string userInput = "";
     int numClientsToInput = 0;
     Client *clientRoster = nullptr; // Will be used to point to array of clients
 
     // Get number of clients validation loop
-    do
-    {
-        cout << "How many clients would you like to input (0 to exit): ";
-        getline(cin, userInput);
-        if (isInt(userInput))
-        {
-            numClientsToInput = stoi(userInput);
-        }
-        else
-        {
-            cout << "Invalid. Please enter an integer > 0.";
-        }
-    } while (numClientsToInput <= 0);
+    numClientsToInput = getPositiveIntFromUser(0, "How many clients would you like to input (0 to exit): ", "Invalid. Please enter an integer > 0.");
 
     // Now that we have a valid int, let's create a client roster of that size
-    clientRoster = new Client[numClientsToInput];
+    // clientRoster = new Client[numClientsToInput];
 
-    
     // Deallocate heap elements and nullify pointers
     delete[] clientRoster;
     clientRoster = nullptr;
@@ -64,4 +54,23 @@ bool isInt(const string &str)
         }
     }
     return true;
+}
+
+// Validation loop that returns int >= 0
+unsigned int getPositiveIntFromUser(unsigned int lowerBound, const string &prompt, const string &errorMessage)
+{
+    string userInput;
+    while (true)
+    {
+        cout << prompt;
+        getline(cin, userInput);
+        if (isInt(userInput) && stoi(userInput) > 0)
+        {
+            return stoi(userInput);
+        }
+        else
+        {
+            cout << "\t" << errorMessage << endl;
+        }
+    }
 }
