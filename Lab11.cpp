@@ -8,12 +8,15 @@ using namespace std;
 
 struct Client
 {
-    Client() { numOfClients++; }
     static size_t numOfClients;
     string name;
     string address;
     string *tasks;
     unsigned int numTasks; // Stores array size for tasks
+    Client()
+    {
+        ++numOfClients;
+    }
     ~Client()
     {
         if (tasks)
@@ -21,6 +24,8 @@ struct Client
         tasks = nullptr;
     }
 };
+
+size_t Client::numOfClients = 0; // Required initialization outside of struct. C++, why are you like this?
 
 bool isInt(const string &str);                                                                                  // Checks if string is an integer
 unsigned int getPositiveIntFromUser(unsigned int lowerBound, const string &prompt, const string &errorMessage); // Collect an integer >= 0 from user
@@ -41,15 +46,20 @@ int main()
     clientRosterPtr = new Client[numClientsToInput]; // clientRosterPtr now points to new array of clients
 
     // Loop through array to create client profiles
+    cout << "++ INPUT CLIENT INFO" << endl; // Output completion message
     for (size_t i = 0; i < numClientsToInput; i++)
     {
         inputClient(&clientRosterPtr[i]);
+        cout << endl;
     }
+    cout << "++ CLIENT INPUT COMPLETE" << endl; // Output completion message
 
     // Loop through array to output client profiles
     for (size_t i = 0; i < Client::numOfClients; i++)
     {
-        inputClient(&clientRosterPtr[i]);
+        cout << "Client #" << i + 1 << endl;
+        displayClient(&clientRosterPtr[i]);
+        cout << endl;
     }
 
     // Deallocate heap elements and nullify pointers
@@ -110,4 +120,14 @@ void inputClient(Client *cPtr)
 }
 
 // Displays client information for given client
-void displayClient(const Client *const cPtr);
+void displayClient(const Client *const cPtr)
+{
+    cout << "Client name: " << cPtr->name << endl;
+    cout << "Client address: " << cPtr->address << endl;
+
+    // Output all tasks related to client
+    for (size_t i = 0; i < cPtr->numTasks; i++)
+    {
+        cout << "Task #" << i + 1 << ": " << cPtr->tasks[i] << endl;
+    }
+}
