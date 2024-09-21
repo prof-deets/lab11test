@@ -8,6 +8,7 @@ using namespace std;
 
 struct Client
 {
+    Client() { numOfClients++; }
     static size_t numOfClients;
     string name;
     string address;
@@ -46,7 +47,7 @@ int main()
     }
 
     // Loop through array to output client profiles
-    for (size_t i = 0; i < numClientsToInput; i++)
+    for (size_t i = 0; i < Client::numOfClients; i++)
     {
         inputClient(&clientRosterPtr[i]);
     }
