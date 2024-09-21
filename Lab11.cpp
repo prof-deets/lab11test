@@ -1,6 +1,7 @@
 // Program creates a client roster with a todo list (array) of tasks that need to be performed for each client
 
 #include <iostream>
+#include <iomanip>
 #include <array>
 #include <string>
 
@@ -35,7 +36,7 @@ void displayClient(const Client *const cPtr);                                   
 int main()
 {
     // Initialize variables
-    // string userInput = "";
+    const string DIVIDER = string(30, '*');
     int numClientsToInput = 0;
     Client *clientRosterPtr = nullptr; // Will be used to point to array of clients
 
@@ -46,21 +47,25 @@ int main()
     clientRosterPtr = new Client[numClientsToInput]; // clientRosterPtr now points to new array of clients
 
     // Loop through array to create client profiles
-    cout << "++ INPUT CLIENT INFO" << endl; // Output completion message
+    cout << endl << "++ INPUT NEW CLIENT INFO ++" << endl; // Input message
     for (size_t i = 0; i < numClientsToInput; i++)
     {
+        cout << "Client #" << i + 1 << endl;
         inputClient(&clientRosterPtr[i]);
         cout << endl;
     }
-    cout << "++ CLIENT INPUT COMPLETE" << endl; // Output completion message
+    cout << DIVIDER << endl
+         << endl; // Input completion message
 
     // Loop through array to output client profiles
+    cout << "== NEW CLIENT ROSTER ==" << endl; // Roster output message
     for (size_t i = 0; i < Client::numOfClients; i++)
     {
         cout << "Client #" << i + 1 << endl;
         displayClient(&clientRosterPtr[i]);
         cout << endl;
     }
+    cout << DIVIDER << endl;
 
     // Deallocate heap elements and nullify pointers
     delete[] clientRosterPtr;
@@ -90,7 +95,7 @@ unsigned int getPositiveIntFromUser(unsigned int lowerBound, const string &promp
     {
         cout << prompt;
         getline(cin, userInput);
-        if (isInt(userInput) && stoi(userInput) > 0)
+        if (isInt(userInput) && stoi(userInput) >= lowerBound)
         {
             return stoi(userInput);
         }
@@ -114,7 +119,7 @@ void inputClient(Client *cPtr)
     cPtr->tasks = new string[cPtr->numTasks]; // Create new array to hold tasks
     for (size_t i = 0; i < cPtr->numTasks; i++)
     {
-        cout << "Please enter task #" << i << ": ";
+        cout << "Please enter task #" << i + 1 << ": ";
         getline(cin, cPtr->tasks[i]);
     }
 }
