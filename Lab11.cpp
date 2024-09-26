@@ -7,7 +7,7 @@
 
 using namespace std;
 
-struct Client
+struct Client   
 {
     static size_t numOfClients;
     string name;
